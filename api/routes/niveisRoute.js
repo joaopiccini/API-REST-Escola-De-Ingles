@@ -5,5 +5,9 @@ const router = Router();
 
 router
     .get('/niveis', NivelController.buscarTodosOsNiveis)
+    .get('/niveis/:id', NivelController.buscarNivelPorId)
+    .post('/niveis', NivelController.cadastrarNivel)
+    .put('/niveis/:id', NivelController.atualizarNivel)
+    .delete('/niveis/:id', NivelController.deletarNivel)
 
  module.exports = router;

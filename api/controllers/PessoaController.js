@@ -69,7 +69,7 @@ class PessoaController {
                     id: Number(id)
                 }
             })
-            return res.status(200).json( { mensagem: 'Pessoa apagada com sucesso' } );
+            return res.status(200).json( { mensagem: 'Pessoa deletada com sucesso' } );
         }
         catch(err){
             return res.status(400).json(err.message);
