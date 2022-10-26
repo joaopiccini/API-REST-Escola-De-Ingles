@@ -1,0 +1,32 @@
+{
+  "name": "api-rest-escola-de-ingles",
+  "version": "1.0.0",
+  "description": "API para um sistema de controle de alunos e turmas de uma escola de inglês.\r ORM com NodeJS: Sequelize e MySQL",
+  "main": "./api/server.js",
+  "scripts": {
+    "start": "nodemon ./api/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joaopiccini/API-REST-Escola-De-Ingles.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/joaopiccini/API-REST-Escola-De-Ingles/issues"
+  },
+  "homepage": "https://github.com/joaopiccini/API-REST-Escola-De-Ingles#readme",
+  "dependencies": {
+    "body-parser": "^1.20.1",
+    "express": "^4.18.2",
+    "mysql2": "^2.3.3",
+    "path": "^0.12.7",
+    "sequelize": "^5.21.7",
+    "sequelize-cli": "^5.5.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}
