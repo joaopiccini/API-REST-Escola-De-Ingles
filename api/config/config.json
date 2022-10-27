@@ -1,6 +1,6 @@
 {
   "development": {
-    "username": "root",
+    "username": "mysql",
     "password": "mysql",
     "database": "escola_ingles",
     "host": "127.0.0.1",

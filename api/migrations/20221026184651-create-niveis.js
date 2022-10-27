@@ -1,5 +1,7 @@
 'use strict';
+
 module.exports = {
+
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('Niveis', {
       id: {
@@ -21,7 +23,9 @@ module.exports = {
       }
     });
   },
+
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable('Niveis');
   }
+  
 };

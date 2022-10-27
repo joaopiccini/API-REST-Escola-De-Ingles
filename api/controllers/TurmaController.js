@@ -35,7 +35,7 @@ class TurmaController {
       catch(err){
           return res.status(400).json(err.message);
       }
-  }
+    }
 
     static async atualizarTurma(req, res){
       const dadosAtualizados = req.body;
@@ -57,7 +57,7 @@ class TurmaController {
       catch(err){
           return res.status(400).json(err.message);
       }
-  }
+    }
 
     static async deletarTurma(req, res){
       const id = req.params.id;
@@ -72,7 +72,22 @@ class TurmaController {
       catch(err){
           return res.status(400).json(err.message);
       }
-  }
+    }
+
+    static async restaurarTurma(req, res) {
+        const id = req.params.id;
+        try {
+            await database.Turmas.restore({
+                where: {
+                    id: Number(id) 
+                } 
+            })
+            return res.status(200).json({ mensagem: 'Turma restaurada com sucesso'})
+        }
+        catch (error) {
+            return res.status(500).json(error.message)
+        }
+    }
 
 }
 

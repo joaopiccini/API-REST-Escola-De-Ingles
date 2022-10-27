@@ -35,7 +35,7 @@ class NivelController {
       catch(err){
           return res.status(400).json(err.message);
       }
-  }
+    }
 
     static async atualizarNivel(req, res){
       const dadosAtualizados = req.body;
@@ -57,7 +57,7 @@ class NivelController {
       catch(err){
           return res.status(400).json(err.message);
       }
-  }
+    }
 
     static async deletarNivel(req, res){
       const id = req.params.id;
@@ -72,7 +72,22 @@ class NivelController {
       catch(err){
           return res.status(400).json(err.message);
       }
-  }
+    }
+
+    static async restaurarNivel(req, res) {
+        const id = req.params.id;
+        try {
+            await database.Niveis.restore({
+                where: { 
+                    id: Number(id) 
+                } 
+            })
+            return res.status(200).json({ mensagem: 'Nivel restaurado com sucesso'})
+        }
+        catch (error) {
+            return res.status(500).json(error.message)
+        }
+    }
 
 }
 
