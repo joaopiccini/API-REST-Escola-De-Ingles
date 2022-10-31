@@ -1,12 +1,22 @@
 const database = require('../models');
+const sequelize = require('sequelize');
 
 class PessoaController {
 
+    static async buscarTodasAsPessoasAtivas(req, res){
+        try{
+            const todasAsPessoasAtivas = await database.Pessoas.findAll();
+            return res.status(200).json(todasAsPessoasAtivas);
+        }
+        catch(err){
+            return res.status(500).json(err.message);
+        }
+    }
+
     static async buscarTodasAsPessoas(req, res){
         try{
-            const todasAsPessoas = await database.Pessoas.findAll();
+            const todasAsPessoas = await database.Pessoas.scope('todos').findAll();
             return res.status(200).json(todasAsPessoas);
-            console.log('Requisição recebida na rota /pessoas/id');
         }
         catch(err){
             return res.status(500).json(err.message);
@@ -91,7 +101,25 @@ class PessoaController {
         }
     }
 
-    static async buscarMatricula(req, res){
+    static async inativarPessoa(req, res){
+        const { estudanteId } = req.params;
+        try{
+            database.sequelize.transaction( async t => {
+                await database.Pessoas.update(
+                    {ativo: false}, {where: {id: Number(estudanteId)}}, {transaction: t}
+                )
+                await database.Matriculas.update(
+                    {status: 'cancelado'}, {where: {estudante_id: Number(estudanteId)}}, {transaction: t}
+                )
+                return res.status(200).json({ mensagem: 'Pessoa e matriculas associadas foram inativadas com sucesso'});
+            })
+        }
+        catch(err){
+            return res.status(500).json(err.message);
+        }
+    }
+
+    static async buscarMatriculaPorId(req, res){
         const { estudanteId, matriculaId } = req.params;
         try{
             const matricula = await database.Matriculas.findOne({
@@ -101,6 +129,58 @@ class PessoaController {
                 } 
             });
             return res.status(200).json(matricula);
+        }
+        catch(err){
+            return res.status(500).json(err.message);
+        }
+    }
+
+    static async buscarMatriculasConfirmadasPorTurma(req, res){
+        const { turmaId } = req.params;
+        try{
+            const todasAsMatriculas = await database.Matriculas.findAndCountAll({
+                where: {
+                    turma_id: Number(turmaId),
+                    status: 'confirmado'
+                },
+                limit: 20,
+                order: [['estudante_id', 'ASC']]
+            });
+            return res.status(200).json(todasAsMatriculas);
+        }
+        catch(err){
+            return res.status(500).json(err.message);
+        }
+    }
+
+    static async buscarMatriculasConfirmadas(req, res){
+        const { estudanteId } = req.params;
+        try{
+            const pessoa = await database.Pessoas.findOne({ 
+                where: {
+                    id: Number(estudanteId)
+                }
+            });
+            const matriculas = await pessoa.getMatriculasConfirmadas();
+            return res.status(200).json(matriculas);
+        }
+        catch(err){
+            return res.status(400).json(err.message);
+        }
+    }
+
+    static async buscarTurmasLotadas(req, res){
+        const lotacaoTurma = 3;
+        try{
+            const turmasLotadas = await database.Matriculas.findAndCountAll({
+                where: {
+                    status: 'confirmado',
+                },
+                attributes: ['turma_id'],
+                group: ['turma_id'],
+                having: sequelize.literal(`count(turma_id) >= ${lotacaoTurma}`)
+            })
+            return res.status(200).json(turmasLotadas.count);
         }
         catch(err){
             return res.status(500).json(err.message);
@@ -143,7 +223,7 @@ class PessoaController {
     }
 
     static async deletarMatricula(req, res){
-        const { estudanteId, matriculaId } = req.params;
+        const { matriculaId } = req.params;
         try{
             await database.Matriculas.destroy({
                 where: {
