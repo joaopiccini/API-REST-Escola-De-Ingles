@@ -4,8 +4,8 @@ const PessoaController = require('../controllers/PessoaController.js');
 const router = Router();
 
 router
-    .get('/pessoas', PessoaController.buscarTodasAsPessoasAtivas)
-    .get('/pessoas/todos', PessoaController.buscarTodasAsPessoas)
+    .get('/pessoas', PessoaController.buscarTodasAsPessoas)
+    .get('/pessoas/ativas', PessoaController.buscarTodasAsPessoasAtivas)
     .get('/pessoas/:id', PessoaController.buscarPessoaPorId)
     .get('/pessoas/:estudanteId/matricula/confirmadas', PessoaController.buscarMatriculasConfirmadas)
     .get('/pessoas/:estudanteId/matricula/:matriculaId', PessoaController.buscarMatriculaPorId)
@@ -14,8 +14,8 @@ router
     .post('/pessoas', PessoaController.cadastrarPessoa)
     .post('/pessoas/:id/restaurar', PessoaController.restaurarPessoa)
     .post('/pessoas/:estudanteId/matricula', PessoaController.cadastrarMatricula)
-    .post('/pessoas/:estudanteId/matricula/inativar', PessoaController.inativarPessoa)
     .post('/pessoas/:estudanteId/matricula/:matriculaId/restaurar', PessoaController.restaurarMatricula)
+    .post('/pessoas/:estudanteId/inativar', PessoaController.inativarPessoa)
     .put('/pessoas/:id', PessoaController.atualizarPessoa)
     .put('/pessoas/:estudanteId/matricula/:matriculaId', PessoaController.atualizarMatricula)
     .delete('/pessoas/:id', PessoaController.deletarPessoa)

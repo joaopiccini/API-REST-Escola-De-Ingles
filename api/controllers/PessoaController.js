@@ -1,11 +1,11 @@
-const database = require('../models');
-const sequelize = require('sequelize');
+const { PessoasServices } = require('../services');
+const pessoasServices = new PessoasServices();
 
 class PessoaController {
 
     static async buscarTodasAsPessoasAtivas(req, res){
         try{
-            const todasAsPessoasAtivas = await database.Pessoas.findAll();
+            const todasAsPessoasAtivas = await pessoasServices.buscarRegistrosAtivos();
             return res.status(200).json(todasAsPessoasAtivas);
         }
         catch(err){
@@ -15,7 +15,7 @@ class PessoaController {
 
     static async buscarTodasAsPessoas(req, res){
         try{
-            const todasAsPessoas = await database.Pessoas.scope('todos').findAll();
+            const todasAsPessoas = await pessoasServices.buscarTodosOsRegistros();
             return res.status(200).json(todasAsPessoas);
         }
         catch(err){
@@ -104,15 +104,8 @@ class PessoaController {
     static async inativarPessoa(req, res){
         const { estudanteId } = req.params;
         try{
-            database.sequelize.transaction( async t => {
-                await database.Pessoas.update(
-                    {ativo: false}, {where: {id: Number(estudanteId)}}, {transaction: t}
-                )
-                await database.Matriculas.update(
-                    {status: 'cancelado'}, {where: {estudante_id: Number(estudanteId)}}, {transaction: t}
-                )
-                return res.status(200).json({ mensagem: 'Pessoa e matriculas associadas foram inativadas com sucesso'});
-            })
+            await pessoasServices.inativarPessoaEMatriculas(Number(estudanteId));
+            return res.status(200).json({ mensagem: 'Pessoa e matriculas associadas foram inativadas com sucesso'});
         }
         catch(err){
             return res.status(500).json(err.message);

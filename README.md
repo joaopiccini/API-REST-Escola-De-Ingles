@@ -5,7 +5,7 @@ ORM com NodeJS: Sequelize e MySQL - Curso Alura
 #### Rotas:
 ##### GET
 * http://localhost:3000/pessoas
-* http://localhost:3000/pessoas/todos
+* http://localhost:3000/pessoas/ativas
 * http://localhost:3000/pessoas/:id
 * http://localhost:3000/pessoas/matricula/lotada
 * http://localhost:3000/pessoas/:estudanteId/matricula/confirmadas
