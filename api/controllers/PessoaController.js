@@ -7,8 +7,7 @@ class PessoaController {
         try{
             const todasAsPessoasAtivas = await pessoasServices.buscarRegistrosAtivos();
             return res.status(200).json(todasAsPessoasAtivas);
-        }
-        catch(err){
+        } catch(err){
             return res.status(500).json(err.message);
         }
     }
@@ -17,8 +16,7 @@ class PessoaController {
         try{
             const todasAsPessoas = await pessoasServices.buscarTodosOsRegistros();
             return res.status(200).json(todasAsPessoas);
-        }
-        catch(err){
+        } catch(err){
             return res.status(500).json(err.message);
         }
     }
@@ -26,14 +24,9 @@ class PessoaController {
     static async buscarPessoaPorId(req, res){
         const id = req.params.id;
         try{
-            const pessoa = await database.Pessoas.findOne({
-                 where: {
-                    id: Number(id)
-                } 
-            });
+            const pessoa = await pessoasServices.buscarRegistroPorId(id);
             return res.status(200).json(pessoa);
-        }
-        catch(err){
+        } catch(err){
             return res.status(500).json(err.message);
         }
     }
@@ -41,10 +34,9 @@ class PessoaController {
     static async cadastrarPessoa(req, res){
         const novaPessoa = req.body;
         try{
-            const novaPessoaCriada = await database.Pessoas.create(novaPessoa);
-            return res.status(201).json(novaPessoaCriada);
-        }
-        catch(err){
+            await pessoasServices.criarRegistro(novaPessoa);
+            return res.status(201).json( { mensagem: 'Pessoa cadastrada com sucesso' } );
+        } catch(err){
             return res.status(400).json(err.message);
         }
     }
@@ -53,20 +45,10 @@ class PessoaController {
         const dadosAtualizados = req.body;
         const id = req.params.id;
         try{
-            await database.Pessoas.update(
-                dadosAtualizados, {
-                where: {
-                    id: Number(id)
-                }
-            })
-            const pessoaAtualizada = await database.Pessoas.findOne({
-                where: {
-                   id: Number(id)
-               } 
-           });
+            await pessoasServices.atualizarRegistro(dadosAtualizados, id);
+            const pessoaAtualizada = await pessoasServices.buscarRegistroPorId(id);
             return res.status(200).json(pessoaAtualizada);
-        }
-        catch(err){
+        } catch(err){
             return res.status(400).json(err.message);
         }
     }
@@ -74,14 +56,9 @@ class PessoaController {
     static async deletarPessoa(req, res){
         const id = req.params.id;
         try{
-            await database.Pessoas.destroy({
-                where: {
-                    id: Number(id)
-                }
-            })
+            await pessoasServices.deletarRegistro(id);
             return res.status(200).json( { mensagem: 'Pessoa deletada com sucesso' } );
-        }
-        catch(err){
+        } catch(err){
             return res.status(400).json(err.message);
         }
     }
@@ -89,14 +66,9 @@ class PessoaController {
     static async restaurarPessoa(req, res){
         const id = req.params.id;
         try{
-            await database.Pessoas.restore({
-                where: {
-                    id: Number(id)
-                }
-            })
+            await pessoasServices.restaurarRegistro(id);
             return res.status(200).json( { mensagem: 'Pessoa restaurada com sucesso' } );
-        }
-        catch(err){
+        } catch(err){
             return res.status(400).json(err.message);
         }
     }
@@ -106,8 +78,7 @@ class PessoaController {
         try{
             await pessoasServices.inativarPessoaEMatriculas(Number(estudanteId));
             return res.status(200).json({ mensagem: 'Pessoa e matriculas associadas foram inativadas com sucesso'});
-        }
-        catch(err){
+        } catch(err){
             return res.status(500).json(err.message);
         }
     }
@@ -122,8 +93,7 @@ class PessoaController {
                 } 
             });
             return res.status(200).json(matricula);
-        }
-        catch(err){
+        } catch(err){
             return res.status(500).json(err.message);
         }
     }
@@ -140,8 +110,7 @@ class PessoaController {
                 order: [['estudante_id', 'ASC']]
             });
             return res.status(200).json(todasAsMatriculas);
-        }
-        catch(err){
+        } catch(err){
             return res.status(500).json(err.message);
         }
     }
@@ -156,8 +125,7 @@ class PessoaController {
             });
             const matriculas = await pessoa.getMatriculasConfirmadas();
             return res.status(200).json(matriculas);
-        }
-        catch(err){
+        } catch(err){
             return res.status(400).json(err.message);
         }
     }
@@ -174,8 +142,7 @@ class PessoaController {
                 having: sequelize.literal(`count(turma_id) >= ${lotacaoTurma}`)
             })
             return res.status(200).json(turmasLotadas.count);
-        }
-        catch(err){
+        } catch(err){
             return res.status(500).json(err.message);
         }
     }
@@ -186,8 +153,7 @@ class PessoaController {
         try{
             const novaMatriculaCriada = await database.Matriculas.create(novaMatricula);
             return res.status(201).json(novaMatriculaCriada);
-        }
-        catch(err){
+        } catch(err){
             return res.status(400).json(err.message);
         }
     }
@@ -209,8 +175,7 @@ class PessoaController {
                } 
            });
             return res.status(200).json(matriculaAtualizada);
-        }
-        catch(err){
+        } catch(err){
             return res.status(400).json(err.message);
         }
     }
@@ -224,8 +189,7 @@ class PessoaController {
                 }
             })
             return res.status(200).json( { mensagem: 'Matricula apagada com sucesso' } );
-        }
-        catch(err){
+        } catch(err){
             return res.status(400).json(err.message);
         }
     }
@@ -240,8 +204,7 @@ class PessoaController {
                 }
              })
             return res.status(200).json({ mensagem: 'Matricula restaurada com sucesso'})
-        } 
-        catch (error) {
+        }  catch (error) {
             return res.status(500).json(error.message)
         }
     }

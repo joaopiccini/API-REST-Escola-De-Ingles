@@ -1,4 +1,5 @@
-const database = require('../models');
+const { TurmasServices } = require('../services');
+const turmasServices = new TurmasServices('Turmas');
 const sequelize = require('sequelize');
 const Op = sequelize.Op;
 
@@ -11,7 +12,7 @@ class TurmaController {
         data_inicial ? where.data_inicio[Op.gte] = data_inicial : null;
         data_final ? where.data_inicio[Op.lte] = data_final : null;
       try {
-        const todasAsTurmas = await database.Turmas.findAll({where});
+        const todasAsTurmas = await turmasServices.buscarTodosOsRegistros({where});
         return res.status(200).json(todasAsTurmas);
       } catch (error) {
         return res.status(500).json(error.message);
@@ -21,14 +22,9 @@ class TurmaController {
     static async buscarTurmaPorId(req, res){
       const id = req.params.id;
       try{
-          const turma = await database.Turmas.findOne({
-               where: {
-                  id: Number(id)
-              } 
-          });
+          const turma = await turmasServices.buscarRegistroPorId(id);
           return res.status(200).json(turma);
-      }
-      catch(err){
+      } catch(err){
           return res.status(500).json(err.message);
       }
     }
@@ -36,10 +32,9 @@ class TurmaController {
     static async cadastrarTurma(req, res){
       const novaTurma = req.body;
       try{
-          const novaTurmaCriada = await database.Turmas.create(novaTurma);
-          return res.status(201).json(novaTurmaCriada);
-      }
-      catch(err){
+          await turmasServices.criarRegistro(novaTurma);
+          return res.status(201).json( { mensagem: 'Turma criada com sucesso' } );
+      } catch(err){
           return res.status(400).json(err.message);
       }
     }
@@ -48,20 +43,10 @@ class TurmaController {
       const dadosAtualizados = req.body;
       const id = req.params.id;
       try{
-          await database.Turmas.update(
-              dadosAtualizados, {
-              where: {
-                  id: Number(id)
-              }
-          })
-          const turmaAtualizada = await database.Turmas.findOne({
-              where: {
-                 id: Number(id)
-             } 
-         });
+          await turmasServices.atualizarRegistro(dadosAtualizados, id);
+          const turmaAtualizada = await turmasServices.buscarRegistroPorId(id);
           return res.status(200).json(turmaAtualizada);
-      }
-      catch(err){
+      } catch(err){
           return res.status(400).json(err.message);
       }
     }
@@ -69,14 +54,9 @@ class TurmaController {
     static async deletarTurma(req, res){
       const id = req.params.id;
       try{
-          await database.Turmas.destroy({
-              where: {
-                  id: Number(id)
-              }
-          })
+          await turmasServices.deletarRegistro(id);
           return res.status(200).json( { mensagem: 'Turma deletada com sucesso' } );
-      }
-      catch(err){
+      } catch(err){
           return res.status(400).json(err.message);
       }
     }
@@ -84,14 +64,9 @@ class TurmaController {
     static async restaurarTurma(req, res) {
         const id = req.params.id;
         try {
-            await database.Turmas.restore({
-                where: {
-                    id: Number(id) 
-                } 
-            })
+            await turmasServices.restaurarRegistro(id);
             return res.status(200).json({ mensagem: 'Turma restaurada com sucesso'})
-        }
-        catch (error) {
+        } catch (error) {
             return res.status(500).json(error.message)
         }
     }
