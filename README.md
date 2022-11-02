@@ -8,7 +8,7 @@ ORM com NodeJS: Sequelize e MySQL - Curso Alura
 * http://localhost:3000/pessoas/ativas
 * http://localhost:3000/pessoas/:id
 * http://localhost:3000/pessoas/matricula/lotada
-* http://localhost:3000/pessoas/:estudanteId/matricula/confirmadas
+* http://localhost:3000/pessoas/matricula/:turmaId/confirmadas
 * http://localhost:3000/pessoas/:estudanteId/matricula/:matriculaId
 * http://localhost:3000/niveis
 * http://localhost:3000/niveis/:id
