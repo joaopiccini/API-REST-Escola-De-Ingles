@@ -1,6 +1,6 @@
 {
   "name": "api-rest-escola-de-ingles",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "API para um sistema de controle de alunos e turmas de uma escola de inglês.\r ORM com NodeJS: Sequelize e MySQL",
   "main": "./api/server.js",
   "scripts": {

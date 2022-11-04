@@ -1,10 +1,11 @@
 const Services = require('./Services.js')
 const database = require('../models')
+const sequelize = require('sequelize')
 
 class PessoasServices extends Services {
 
     constructor(){
-        super('Pessoas');
+        super('Pessoas')
         this.matriculas = new Services('Matriculas')
     }
 

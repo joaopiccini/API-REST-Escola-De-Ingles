@@ -1,7 +1,7 @@
-const { Router } = require('express');
-const PessoaController = require('../controllers/PessoaController.js');
+const { Router } = require('express')
+const PessoaController = require('../controllers/PessoaController.js')
 
-const router = Router();
+const router = Router()
 
 router
     .get('/pessoas', PessoaController.buscarTodasAsPessoas)
@@ -13,4 +13,4 @@ router
     .put('/pessoas/:id', PessoaController.atualizarPessoa)
     .delete('/pessoas/:id', PessoaController.deletarPessoa)
 
-module.exports = router;
+module.exports = router

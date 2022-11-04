@@ -1,7 +1,7 @@
-const { Router } = require('express');
-const TurmaController = require('../controllers/TurmaController');
+const { Router } = require('express')
+const TurmaController = require('../controllers/TurmaController')
 
-const router = Router();
+const router = Router()
 
 router
     .get('/turmas', TurmaController.buscarTodasAsTurmas)
@@ -11,4 +11,4 @@ router
     .put('/turmas/:id', TurmaController.atualizarTurma)
     .delete('/turmas/:id', TurmaController.deletarTurma)
 
-module.exports = router;
+module.exports = router

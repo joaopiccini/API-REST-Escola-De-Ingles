@@ -1,4 +1,4 @@
-const Services = require('./Services.js');
+const Services = require('./Services.js')
 
 class NiveisServices extends Services {
 
@@ -8,4 +8,4 @@ class NiveisServices extends Services {
 
 }
 
-module.exports = NiveisServices;
+module.exports = NiveisServices

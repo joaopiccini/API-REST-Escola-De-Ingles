@@ -1,7 +1,7 @@
-const { Router } = require('express');
-const NivelController = require('../controllers/NivelController.js');
+const { Router } = require('express')
+const NivelController = require('../controllers/NivelController.js')
 
-const router = Router();
+const router = Router()
 
 router
     .get('/niveis', NivelController.buscarTodosOsNiveis)
@@ -11,4 +11,4 @@ router
     .put('/niveis/:id', NivelController.atualizarNivel)
     .delete('/niveis/:id', NivelController.deletarNivel)
 
- module.exports = router;
+ module.exports = router

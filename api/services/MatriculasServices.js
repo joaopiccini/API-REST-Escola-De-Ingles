@@ -11,7 +11,7 @@ class MatriculasServices extends Services {
     async buscarRegistroPorId(estudanteId, matriculaId){
         return await database[this.nomeDoModelo].findOne({
             where: {
-                id: matriculaId, 
+                id: matriculaId,
                 estudante_id: estudanteId
             }
         })
@@ -26,7 +26,18 @@ class MatriculasServices extends Services {
             order: [['estudante_id', 'ASC']]
         })
     }
-    async buscarRegistrosDeTurmasLotadas(turmaId){
+
+    async buscarRegistroPorPessoa(estudanteId){
+        return await database[this.nomeDoModelo].findAndCountAll({
+            where: {
+                estudante_id: estudanteId,
+                status: 'confirmado'
+            }, 
+            order: [['estudante_id', 'ASC']]
+        })
+    }
+
+    async buscarRegistrosDeTurmasLotadas(){
         const lotacaoTurma = 2;
         return await database[this.nomeDoModelo].findAndCountAll({
             where: {
@@ -36,6 +47,14 @@ class MatriculasServices extends Services {
             group: ['turma_id'],
             having: sequelize.literal(`count(turma_id) >= ${lotacaoTurma}`)
         })
+    }
+
+    async atualizarRegistro(dadosAtualizados, estudanteId, matriculaId, t = {}){
+        return await database[this.nomeDoModelo].update(dadosAtualizados, {where: {id: matriculaId, estudante_id: estudanteId}}, t)
+    }
+
+    async restaurarRegistro(estudanteId, matriculaId, t = {}){
+        return await database[this.nomeDoModelo].restore({where: {id: matriculaId, estudante_id: estudanteId}}, t)
     }
 
 }

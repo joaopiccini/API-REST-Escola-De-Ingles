@@ -18,18 +18,17 @@ class MatriculaController {
     static async buscarMatriculasConfirmadasPorTurma(req, res){
         const { turmaId } = req.params
         try{
-            const todasAsMatriculas = await matriculasServices.buscarRegistroPorTurma(turmaId)
-            return res.status(200).json(todasAsMatriculas)
+            const matriculas = await matriculasServices.buscarRegistroPorTurma(turmaId)
+            return res.status(200).json(matriculas)
         } catch(err){
             return res.status(500).json(err.message)
         }
     }
 
-    static async buscarMatriculasConfirmadas(req, res){ //falta ajustar
+    static async buscarMatriculasConfirmadasPorPessoa(req, res){
         const { estudanteId } = req.params
         try{
-            const pessoa = await pessoasServices.buscarRegistroPorId(estudanteId)
-            const matriculas = await pessoa.getMatriculasConfirmadas()
+            const matriculas = await matriculasServices.buscarRegistroPorPessoa(estudanteId)
             return res.status(200).json(matriculas)
         } catch(err){
             return res.status(400).json(err.message)
@@ -56,51 +55,32 @@ class MatriculaController {
         }
     }
 
-    static async atualizarMatricula(req, res){ //falta ajustar
+    static async atualizarMatricula(req, res){
         const dadosAtualizados = req.body
         const { estudanteId, matriculaId } = req.params
         try{
-            await database.Matriculas.update(
-                dadosAtualizados, {
-                where: {
-                    id: Number(matriculaId),
-                    estudante_id: Number(estudanteId)
-                }
-            })
-            const matriculaAtualizada = await database.Matriculas.findOne({
-                where: {
-                   id: Number(matriculaId)
-               } 
-           })
+            await matriculasServices.atualizarRegistro(dadosAtualizados, estudanteId, matriculaId)
+            const matriculaAtualizada = await matriculasServices.buscarRegistroPorId(estudanteId, matriculaId)
             return res.status(200).json(matriculaAtualizada)
         } catch(err){
             return res.status(400).json(err.message)
         }
     }
 
-    static async deletarMatricula(req, res){ //falta ajustar
+    static async deletarMatricula(req, res){
         const { matriculaId } = req.params
         try{
-            await database.Matriculas.destroy({
-                where: {
-                    id: Number(matriculaId)
-                }
-            })
+            await matriculasServices.deletarRegistro(matriculaId)
             return res.status(200).json( { mensagem: 'Matricula apagada com sucesso' } )
         } catch(err){
             return res.status(400).json(err.message)
         }
     }
 
-    static async restaurarMatricula(req, res) { //falta ajustar
+    static async restaurarMatricula(req, res) {
         const { estudanteId, matriculaId } = req.params
         try {
-            await database.Matriculas.restore({
-                where: {
-                    id: Number(matriculaId),
-                    estudante_id: Number(estudanteId)
-                }
-             })
+            await matriculasServices.restaurarRegistro(estudanteId, matriculaId)
             return res.status(200).json({ mensagem: 'Matricula restaurada com sucesso'})
         }  catch (error) {
             return res.status(500).json(error.message)
@@ -109,4 +89,4 @@ class MatriculaController {
 
 }
 
-module.exports = MatriculaController;
+module.exports = MatriculaController

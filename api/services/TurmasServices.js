@@ -1,4 +1,4 @@
-const Services = require('./Services.js');
+const Services = require('./Services.js')
 
 class TurmasServices extends Services {
 
@@ -8,4 +8,4 @@ class TurmasServices extends Services {
 
 }
 
-module.exports = TurmasServices;
+module.exports = TurmasServices

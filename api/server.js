@@ -1,11 +1,11 @@
-const express = require('express');
-const routes = require('./routes');
+const express = require('express')
+const routes = require('./routes')
 
-const app = express();
-const port = process.env.PORT || 3000;
+const app = express()
+const port = process.env.PORT || 3000
 
-routes(app);
+routes(app)
 
 app.listen(port, ()=>{
-    console.log(`Servidor escutando em http://localhost:${port}`);
-});
+    console.log(`Servidor escutando em http://localhost:${port}`)
+})
